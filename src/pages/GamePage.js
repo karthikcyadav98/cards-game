@@ -20,11 +20,7 @@ class GamePage extends Component {
 			color: [ { key: 1, value: 'red', text: 'red' }, { key: 2, value: 'black', text: 'black' } ],
 			player1Moves: [],
 			player2Moves: [],
-			activePlayer1Moves: [
-				{ key: 1, denom: 1, suit: 'heart', color: 'red', colorId: 1 },
-				{ key: 2, denom: 2, suit: 'heart', color: 'red', colorId: 2 },
-				{ key: 3, denom: 3, suit: 'heart', color: 'red', colorId: 3 }
-			],
+			activePlayer1Moves: [],
 			activePlayer2Moves: [],
 			playerDisplay: true,
 			open: false,
@@ -180,120 +176,165 @@ class GamePage extends Component {
 			//remove that card from deck
 			let prevDeck = this.state.Deck;
 
-			prevDeck.splice(randomNum, 1);
+			prevDeck.splice(randomNum.key, 1);
 
 			this.setState({
 				Deck: prevDeck
 			});
 		}
 
+		///////////////////////////
+		/////////////
 		//Suit Card
+		////////////////////////////////
+		/////////////////
 		if (this.state.suitCard) {
-			if (!this.state.playerDisplay) {
-				randomNum = Math.floor(Math.random() * (13 - 1) + 1);
-				let player1Cards = this.state.player1Moves;
+			let suitDeck = [];
+			this.state.Deck.map((item) => {
+				if (item.suit === this.state.suitValue) {
+					suitDeck.push(item);
+				}
+			});
 
-				let itemToSplice = null;
-				this.state.Deck.map((item) => {
-					if (randomNum == item.denom && this.state.suitValue == item.suit) {
-						player1Cards.push(item);
-						itemToSplice = item;
+			randomEle = suitDeck[Math.floor(Math.random() * suitDeck.length)];
+
+			if (!this.state.playerDisplay) {
+				let player1Cards = this.state.player1Moves;
+				let active1Card = this.state.activePlayer1Moves;
+				player1Cards.push(randomEle);
+
+				if (active1Card.length != 0) {
+					if (active1Card[active1Card.length - 1].denom < randomEle.denom) {
+						active1Card.push(randomEle);
+					} else {
+						active1Card = [];
+						active1Card.push(randomEle);
 					}
-				});
+				} else {
+					active1Card.push(randomEle);
+				}
+
 				await this.setState({
 					player1Moves: player1Cards,
+					activePlayer1Moves: active1Card,
 					open: false
 				});
 
-				//remove that card from deck
-				if (itemToSplice != null) {
-					let prevDeck = this.state.Deck;
-					prevDeck.splice(itemToSplice.key, 1);
-
-					this.setState({
-						Deck: prevDeck
-					});
+				if (active1Card.length == 4) {
+					alert('player 1 has won');
 				}
 			} else {
-				randomNum = Math.floor(Math.random() * (13 - 1) + 1);
 				let player2Cards = this.state.player2Moves;
+				let active2Card = this.state.activePlayer2Moves;
+				player2Cards.push(randomEle);
 
-				let itemToSplice = null;
-				this.state.Deck.map((item) => {
-					if (randomNum == item.denom && this.state.suitValue == item.suit) {
-						player2Cards.push(item);
-						itemToSplice = item;
+				if (active2Card.length != 0) {
+					if (active2Card[active2Card.length - 1].denom < randomEle.denom) {
+						active2Card.push(randomEle);
+					} else {
+						active2Card = [];
+						active2Card.push(randomEle);
 					}
-				});
+				} else {
+					active2Card.push(randomEle);
+				}
+
 				await this.setState({
 					player2Moves: player2Cards,
+					activePlayer2Moves: active2Card,
 					open: false
 				});
 
-				//remove that card from deck
-				if (itemToSplice != null) {
-					let prevDeck = this.state.Deck;
-					prevDeck.splice(itemToSplice.key, 1);
-
-					this.setState({
-						Deck: prevDeck
-					});
+				if (active2Card.length == 4) {
+					alert('player 2 has won');
 				}
+			}
+
+			//remove that card from deck
+			if (randomEle != null) {
+				let prevDeck = this.state.Deck;
+				prevDeck.splice(randomEle.key, 1);
+
+				this.setState({
+					Deck: prevDeck
+				});
 			}
 		}
 
+		////////////////////
+		////////////////////////////////
 		//Color Card
+		/////////////////
+		////////////////////////////
 		if (this.state.colorCard) {
-			if (!this.state.playerDisplay) {
-				randomNum = Math.floor(Math.random() * (26 - 1) + 1);
-				let player1Cards = this.state.player1Moves;
+			let colorDeck = [];
+			this.state.Deck.map((item) => {
+				if (item.color === this.state.colorValue) {
+					colorDeck.push(item);
+				}
+			});
 
-				let itemToSplice = null;
-				this.state.Deck.map((item) => {
-					if (randomNum == item.colorId && this.state.colorValue == item.color) {
-						player1Cards.push(item);
-						itemToSplice = item;
+			randomEle = colorDeck[Math.floor(Math.random() * colorDeck.length)];
+
+			if (!this.state.playerDisplay) {
+				let player1Cards = this.state.player1Moves;
+				let active1Card = this.state.activePlayer1Moves;
+				player1Cards.push(randomEle);
+
+				if (active1Card.length != 0) {
+					if (active1Card[active1Card.length - 1].denom < randomEle.denom) {
+						active1Card.push(randomEle);
+					} else {
+						active1Card = [];
+						active1Card.push(randomEle);
 					}
-				});
+				} else {
+					active1Card.push(randomEle);
+				}
+
 				await this.setState({
 					player1Moves: player1Cards,
+					activePlayer1Moves: active1Card,
 					open: false
 				});
 
-				//remove that card from deck
-				if (itemToSplice != null) {
-					let prevDeck = this.state.Deck;
-					prevDeck.splice(itemToSplice.key, 1);
-
-					this.setState({
-						Deck: prevDeck
-					});
+				if (active1Card.length == 4) {
+					alert('player 1 has won');
 				}
 			} else {
-				randomNum = Math.floor(Math.random() * (26 - 1) + 1);
 				let player2Cards = this.state.player2Moves;
+				let active2Card = this.state.activePlayer2Moves;
+				player2Cards.push(randomEle);
 
-				let itemToSplice = null;
-				this.state.Deck.map((item) => {
-					if (randomNum == item.colorId && this.state.colorValue == item.color) {
-						player2Cards.push(item);
-						itemToSplice = item;
+				if (active2Card.length != 0) {
+					if (active2Card[active2Card.length - 1].denom < randomEle.denom) {
+						active2Card.push(randomEle);
+					} else {
+						active2Card = [];
+						active2Card.push(randomEle);
 					}
-				});
+				} else {
+					active2Card.push(randomEle);
+				}
+
 				await this.setState({
 					player2Moves: player2Cards,
+					activePlayer2Moves: active2Card,
 					open: false
 				});
 
-				//remove that card from deck
-				if (itemToSplice != null) {
-					let prevDeck = this.state.Deck;
-					prevDeck.splice(itemToSplice.key, 1);
-
-					this.setState({
-						Deck: prevDeck
-					});
+				if (active2Card.length == 4) {
+					alert('player 2 has won');
 				}
+			}
+			//remove that card from deck
+			if (randomEle != null) {
+				let prevDeck = this.state.Deck;
+				prevDeck.splice(randomEle.key, 1);
+
+				this.setState({
+					Deck: prevDeck
+				});
 			}
 		}
 	};
@@ -307,27 +348,6 @@ class GamePage extends Component {
 
 	handleReset = () => {
 		window.location.reload();
-		// this.setState({
-		// 	Deck: [],
-		// 	suits: [
-		// 		{ key: 1, value: 'heart', text: 'heart', color: 'red' },
-		// 		{ key: 2, value: 'diamond', text: 'diamond', color: 'red' },
-		// 		{ key: 3, value: 'club', text: 'club', color: 'black' },
-		// 		{ key: 4, value: 'spade', text: 'spade', color: 'black' }
-		// 	],
-		// 	color: [ { key: 1, value: 'red', text: 'red' }, { key: 2, value: 'black', text: 'black' } ],
-		// 	player1Moves: [],
-		// 	player2Moves: [],
-		// 	activePlayer1Moves: [],
-		// 	activePlayer2Moves: [],
-		// 	playerDisplay: true,
-		// 	open: false,
-		// 	anyCard: true,
-		// 	suitCard: false,
-		// 	colorCard: false,
-		// 	colorValue: '',
-		// 	suitValue: ''
-		// });
 	};
 
 	render() {
