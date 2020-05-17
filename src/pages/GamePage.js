@@ -10,7 +10,7 @@ class GamePage extends Component {
 		super(props);
 
 		this.state = {
-			Deck: [ { key: 1, denom: 1, suit: 'heart', color: 'red' } ],
+			Deck: [],
 			suits: [
 				{ key: 1, value: 'heart', text: 'heart', color: 'red' },
 				{ key: 2, value: 'diamond', text: 'diamond', color: 'red' },
@@ -20,7 +20,11 @@ class GamePage extends Component {
 			color: [ { key: 1, value: 'red', text: 'red' }, { key: 2, value: 'black', text: 'black' } ],
 			player1Moves: [],
 			player2Moves: [],
-			activePlayer1Moves: [],
+			activePlayer1Moves: [
+				{ key: 1, denom: 1, suit: 'heart', color: 'red', colorId: 1 },
+				{ key: 2, denom: 2, suit: 'heart', color: 'red', colorId: 2 },
+				{ key: 3, denom: 3, suit: 'heart', color: 'red', colorId: 3 }
+			],
 			activePlayer2Moves: [],
 			playerDisplay: true,
 			open: false,
@@ -115,65 +119,72 @@ class GamePage extends Component {
 	//PopUp Submit Button
 	handleSubmit = async () => {
 		let randomNum;
+		let randomEle;
 
 		//Any Card Selection
 		if (this.state.anyCard) {
+			randomEle = this.state.Deck[Math.floor(Math.random() * this.state.Deck.length)];
 			if (!this.state.playerDisplay) {
-				randomNum = Math.floor(Math.random() * (52 - 1) + 1);
-
 				let player1Cards = this.state.player1Moves;
 				let active1Card = this.state.activePlayer1Moves;
+				player1Cards.push(randomEle);
 
-				this.state.Deck.map((item) => {
-					if (randomNum == item.key) {
-						player1Cards.push(item);
-						let push = null;
-						active1Card.map((card) => {
-							if (card.denom < item.denom) {
-								push = true;
-							}
-						});
-						active1Card.push(item);
+				if (active1Card.length != 0) {
+					if (active1Card[active1Card.length - 1].denom < randomEle.denom) {
+						active1Card.push(randomEle);
+					} else {
+						active1Card = [];
+						active1Card.push(randomEle);
 					}
-				});
+				} else {
+					active1Card.push(randomEle);
+				}
+
 				await this.setState({
 					player1Moves: player1Cards,
 					activePlayer1Moves: active1Card,
 					open: false
 				});
 
-				//remove that card from deck
-				let prevDeck = this.state.Deck;
-
-				prevDeck.splice(randomNum, 1);
-
-				this.setState({
-					Deck: prevDeck
-				});
+				if (active1Card.length == 4) {
+					alert('player 1 has won');
+				}
 			} else {
-				randomNum = Math.floor(Math.random() * (52 - 1) + 1);
-
 				let player2Cards = this.state.player2Moves;
+				let active2Card = this.state.activePlayer2Moves;
 
-				this.state.Deck.map((item) => {
-					if (randomNum == item.key) {
-						player2Cards.push(item);
+				player2Cards.push(randomEle);
+
+				if (active2Card.length != 0) {
+					if (active2Card[active2Card.length - 1].denom < randomEle.denom) {
+						active2Card.push(randomEle);
+					} else {
+						active2Card = [];
+						active2Card.push(randomEle);
 					}
-				});
+				} else {
+					active2Card.push(randomEle);
+				}
+
 				await this.setState({
 					player2Moves: player2Cards,
+					activePlayer2Moves: active2Card,
 					open: false
 				});
 
-				//remove that card from deck
-				let prevDeck = this.state.Deck;
-
-				prevDeck.splice(randomNum, 1);
-
-				this.setState({
-					Deck: prevDeck
-				});
+				if (active2Card.length == 4) {
+					alert('player 2 has won');
+				}
 			}
+
+			//remove that card from deck
+			let prevDeck = this.state.Deck;
+
+			prevDeck.splice(randomNum, 1);
+
+			this.setState({
+				Deck: prevDeck
+			});
 		}
 
 		//Suit Card
@@ -197,7 +208,6 @@ class GamePage extends Component {
 				//remove that card from deck
 				if (itemToSplice != null) {
 					let prevDeck = this.state.Deck;
-					console.log('itemToSplice.key', itemToSplice.key);
 					prevDeck.splice(itemToSplice.key, 1);
 
 					this.setState({
@@ -223,14 +233,12 @@ class GamePage extends Component {
 				//remove that card from deck
 				if (itemToSplice != null) {
 					let prevDeck = this.state.Deck;
-					console.log('itemToSplice.key', itemToSplice.key);
 					prevDeck.splice(itemToSplice.key, 1);
 
 					this.setState({
 						Deck: prevDeck
 					});
 				}
-				console.log('prevcart', this.state.Deck);
 			}
 		}
 
@@ -243,7 +251,6 @@ class GamePage extends Component {
 				let itemToSplice = null;
 				this.state.Deck.map((item) => {
 					if (randomNum == item.colorId && this.state.colorValue == item.color) {
-						console.log(item.color);
 						player1Cards.push(item);
 						itemToSplice = item;
 					}
@@ -256,7 +263,6 @@ class GamePage extends Component {
 				//remove that card from deck
 				if (itemToSplice != null) {
 					let prevDeck = this.state.Deck;
-					console.log('itemToSplice.key', itemToSplice.key);
 					prevDeck.splice(itemToSplice.key, 1);
 
 					this.setState({
@@ -282,14 +288,12 @@ class GamePage extends Component {
 				//remove that card from deck
 				if (itemToSplice != null) {
 					let prevDeck = this.state.Deck;
-					console.log('itemToSplice.key', itemToSplice.key);
 					prevDeck.splice(itemToSplice.key, 1);
 
 					this.setState({
 						Deck: prevDeck
 					});
 				}
-				console.log('prevcart', this.state.Deck);
 			}
 		}
 	};
@@ -301,11 +305,39 @@ class GamePage extends Component {
 		});
 	};
 
+	handleReset = () => {
+		window.location.reload();
+		// this.setState({
+		// 	Deck: [],
+		// 	suits: [
+		// 		{ key: 1, value: 'heart', text: 'heart', color: 'red' },
+		// 		{ key: 2, value: 'diamond', text: 'diamond', color: 'red' },
+		// 		{ key: 3, value: 'club', text: 'club', color: 'black' },
+		// 		{ key: 4, value: 'spade', text: 'spade', color: 'black' }
+		// 	],
+		// 	color: [ { key: 1, value: 'red', text: 'red' }, { key: 2, value: 'black', text: 'black' } ],
+		// 	player1Moves: [],
+		// 	player2Moves: [],
+		// 	activePlayer1Moves: [],
+		// 	activePlayer2Moves: [],
+		// 	playerDisplay: true,
+		// 	open: false,
+		// 	anyCard: true,
+		// 	suitCard: false,
+		// 	colorCard: false,
+		// 	colorValue: '',
+		// 	suitValue: ''
+		// });
+	};
+
 	render() {
 		return (
 			<div>
 				<Header block>
 					<h1>Player{+this.state.playerDisplay ? ' 1 ' : ' 2 '}Turn to Pick Card</h1>
+					<Button color="red" onClick={this.handleReset}>
+						Restart the game
+					</Button>
 				</Header>
 				<Grid container style={{ marginTop: 10 }}>
 					<Grid.Column width={8}>
