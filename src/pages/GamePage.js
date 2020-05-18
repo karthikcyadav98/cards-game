@@ -114,7 +114,6 @@ class GamePage extends Component {
 
 	//PopUp Submit Button
 	handleSubmit = async () => {
-		let randomNum;
 		let randomEle;
 
 		//Any Card Selection
@@ -176,7 +175,7 @@ class GamePage extends Component {
 			//remove that card from deck
 			let prevDeck = this.state.Deck;
 
-			prevDeck.splice(randomNum.key, 1);
+			prevDeck.splice(randomEle.key, 1);
 
 			this.setState({
 				Deck: prevDeck
@@ -378,7 +377,11 @@ class GamePage extends Component {
 								this.state.player1Moves.map((item) => {
 									return (
 										<Grid>
-											<Grid.Column style={{ marginTop: 30 }} as="h1" width={5}>
+											<Grid.Column
+												style={{ marginTop: 30, backgroundColor: 'green' }}
+												as="h1"
+												width={5}
+											>
 												{item.denom}
 											</Grid.Column>
 											<Grid.Column width={5}>
